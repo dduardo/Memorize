@@ -6,18 +6,21 @@
 //
 
 import Foundation
-//Model
+
 struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
-    private var indexOfTheOneOnlyFaceUpCard: Int?
+    private var indexOfTheOneOnlyFaceUpCard: Int? {
+        get { cards.indices.filter({ cards[$0].isFaceUp }).oneAndOnly }
+        set { cards.indices.forEach { cards[$0].isFaceUp = ($0 == newValue) } }
+    }
     
     init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
-        cards = Array<Card>()
+        cards = []
         for pairIndex in 0..<numberOfPairsOfCards {
             let content: CardContent = createCardContent(pairIndex)
             cards.append(Card(content: content, id: pairIndex*2))
             cards.append(Card(content: content, id: pairIndex*2+1))
-        }        
+        }
     }
     
     mutating func choose(_ card: Card) {
@@ -30,27 +33,27 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                     cards[potentialMatchIndex].isMatched = true
                 }
                 
-                indexOfTheOneOnlyFaceUpCard = nil
+                cards[choosenIndex].isFaceUp = true
             } else {
-                for index in cards.indices {
-                    cards[index].isFaceUp = false
-                }
-                
                 indexOfTheOneOnlyFaceUpCard = choosenIndex
             }
-            
-            self.cards[choosenIndex].isFaceUp.toggle()
-            print("choosenCard = \(self.cards[choosenIndex])")
         }
-        
-        print("card: \(card)")
-        print("cards: \(cards)")
     }
     
     struct Card: Identifiable {
-        var isFaceUp: Bool = false
-        var isMatched: Bool = false
-        var content: CardContent
-        var id: Int
+        var isFaceUp = true
+        var isMatched = false
+        let content: CardContent
+        let id: Int
+    }
+}
+
+extension Array {
+    var oneAndOnly: Element? {
+        if self.count == 1 {
+            return first
+        } else {
+            return nil
+        }
     }
 }
