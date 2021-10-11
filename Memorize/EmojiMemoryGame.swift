@@ -20,7 +20,7 @@ class EmojiMemoryGame: ObservableObject {
     @Published private var model = createMemoryGame()
     
     private static func createMemoryGame() -> MemoryGame<String> {
-        MemoryGame<String>(numberOfPairsOfCards: 8) { pairIndex in EmojiMemoryGame.emojis[pairIndex] }
+        MemoryGame<String>(numberOfPairsOfCards: 6) { pairIndex in EmojiMemoryGame.emojis[pairIndex] }
     }
     
     // MARK - Intent(s)
