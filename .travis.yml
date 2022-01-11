@@ -1,0 +1,7 @@
+language:
+  - swift
+osx_image: xcode12.5
+script:
+  - xcodebuild -scheme Memorize -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11,OS=14.0.1' build test
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -t 106a7821-0627-40f2-906b-dc684074457a
